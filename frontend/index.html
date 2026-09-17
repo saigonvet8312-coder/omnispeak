@@ -310,6 +310,12 @@ async function apiFetch(url, options = {}) {
   return res;
 }
 
+let mediaRecorder, recordedChunks = [], recordedBlob = null, isRecording = false;
+let historyItems = [];
+let allProfiles = [];
+let selectedProfileId = "";
+let selectedProfileName = "Mặc định";
+
 // ---- Giới hạn độ dài văn bản ----
 const SOFT_WORD_LIMIT = 2000;  // vẫn tạo được, chỉ cảnh báo sẽ xử lý theo từng đoạn + mất thời gian
 const HARD_WORD_LIMIT = 3000;  // vượt mức này thì chặn, yêu cầu rút gọn
