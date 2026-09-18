@@ -36,7 +36,9 @@ def start(app_dir, frontend_dir, data_dir=None, port=PORT,
     env["OMNISPEAK_FRONTEND_DIR"] = frontend_dir
     env["PYTHONUNBUFFERED"] = "1"
 
-    log = open(log_path, "ab")
+    # Mỗi lần backend thực sự khởi động lại (không phải chỉ kiểm tra health),
+    # ghi log mới — tránh log cũ tích luỹ qua nhiều lần chạy lại cell trong cùng phiên.
+    log = open(log_path, "wb")
     proc = subprocess.Popen(
         [sys.executable, "-m", "uvicorn", "backend:app", "--app-dir", app_dir,
          "--host", "127.0.0.1", "--port", str(port)],
