@@ -3,21 +3,21 @@
 Đọc văn bản (TTS) và nhân bản giọng nói, chạy trên Google Colab (T4 GPU), dùng model [OmniVoice](https://github.com/k2-fsa/OmniVoice) (`k2-fsa/OmniVoice`, Apache-2.0).
 
 ## Cấu trúc repo
-omnispeak/
-├─ frontend/
-│ ├─ index.html # khung giao diện
-│ ├─ style.css # toàn bộ CSS
-│ └─ app.js # toàn bộ logic JS (gọi API, ghi âm, phát lại...)
-├─ backend/
-│ ├─ backend.py # FastAPI server: TTS, thư viện giọng, lịch sử
-│ └─ requirements.txt # danh sách package cần cài
-├─ scripts/
-│ ├─ colab_utils.py # tiện ích dùng chung (chạy lệnh, báo lỗi)
-│ ├─ install_deps.py # cài apt + pip package
-│ ├─ download_model.py # tải trước model OmniVoice
-│ └─ start_backend.py # khởi động uvicorn, theo dõi health
-├─ .github/workflows/ # kiểm tra tự động khi commit (JSON notebook, cú pháp Python)
-└─ omnispeak.ipynb # notebook chạy trên Colab, chỉ đồng bộ code rồi gọi các script trên
+
+- `frontend/` — giao diện web
+  - `index.html` — khung giao diện
+  - `style.css` — toàn bộ CSS
+  - `app.js` — toàn bộ logic JS (gọi API, ghi âm, phát lại...)
+- `backend/` — server xử lý
+  - `backend.py` — FastAPI server: TTS, thư viện giọng, lịch sử
+  - `requirements.txt` — danh sách package cần cài
+- `scripts/` — các bước chạy trong Colab, tách riêng để notebook gọn
+  - `colab_utils.py` — tiện ích dùng chung (chạy lệnh, báo lỗi)
+  - `install_deps.py` — cài apt + pip package
+  - `download_model.py` — tải trước model OmniVoice
+  - `start_backend.py` — khởi động uvicorn, theo dõi health
+- `.github/workflows/` — kiểm tra tự động khi commit (JSON notebook, cú pháp Python)
+- `omnispeak.ipynb` — notebook chạy trên Colab, chỉ đồng bộ code rồi gọi các script trên
 
 Notebook không nhúng code app — mọi logic nằm trên GitHub, notebook chỉ `git clone`/`git pull` code mới nhất về rồi gọi.
 
