@@ -60,9 +60,9 @@ SR = 24000
 # trong 1 lần đọc. Tăng 2 giá trị này lên để hầu hết văn bản thông thường (vài
 # trăm từ) lọt vào 1 chunk duy nhất; chỉ văn bản thực sự rất dài (gần
 # HARD_WORD_LIMIT) mới cần chia, để tránh tràn VRAM trên T4.
-AUDIO_CHUNK_DURATION = float(os.environ.get("OMNISPEAK_AUDIO_CHUNK_DURATION", "90.0"))
-AUDIO_CHUNK_THRESHOLD = float(os.environ.get("OMNISPEAK_AUDIO_CHUNK_THRESHOLD", "90.0"))
-GEN_NUM_STEP = int(os.environ.get("OMNISPEAK_NUM_STEP", "48"))  # mặc định thư viện là 32
+AUDIO_CHUNK_DURATION = float(os.environ.get("OMNISPEAK_AUDIO_CHUNK_DURATION", "30.0"))
+AUDIO_CHUNK_THRESHOLD = float(os.environ.get("OMNISPEAK_AUDIO_CHUNK_THRESHOLD", "45.0"))
+GEN_NUM_STEP = int(os.environ.get("OMNISPEAK_NUM_STEP", "32"))  # mặc định thư viện là 32
 
 # Giới hạn file mẫu giọng khi upload
 MAX_UPLOAD_BYTES = 15 * 1024 * 1024  # 15 MB
