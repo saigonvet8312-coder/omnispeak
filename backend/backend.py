@@ -54,15 +54,14 @@ SR = 24000
 # theo câu rồi gọi generate() rời rạc từng đoạn (đó chính là nguyên nhân khiến
 # giọng đọc nghe khác tông giữa các phần của cùng 1 văn bản).
 #
-# Mặc định của model: audio_chunk_threshold=30s, audio_chunk_duration=15s — với
-# đoạn văn ~200 từ (~75-90s audio) sẽ bị chia thành 5-6 đoạn nội bộ, mỗi đoạn là
-# một lượt "unmask" riêng của model -> gây hiện tượng tông đọc lên xuống ngay
-# trong 1 lần đọc. Tăng 2 giá trị này lên để hầu hết văn bản thông thường (vài
-# trăm từ) lọt vào 1 chunk duy nhất; chỉ văn bản thực sự rất dài (gần
-# HARD_WORD_LIMIT) mới cần chia, để tránh tràn VRAM trên T4.
-AUDIO_CHUNK_DURATION = float(os.environ.get("OMNISPEAK_AUDIO_CHUNK_DURATION", "30.0"))
-AUDIO_CHUNK_THRESHOLD = float(os.environ.get("OMNISPEAK_AUDIO_CHUNK_THRESHOLD", "45.0"))
-GEN_NUM_STEP = int(os.environ.get("OMNISPEAK_NUM_STEP", "32"))  # mặc định thư viện là 32
+# Mặc định của model: audio_chunk_threshold=30s, audio_chunk_duration=15s. Đã thử
+# tăng 2 giá trị này lên (90/90) để giảm số lần chia đoạn nội bộ, nhưng lại gây
+# giật/nhảy cụt audio ngẫu nhiên (chunk quá dài không ổn định) — nên đã BỎ, quay
+# về đúng mặc định gốc của thư viện (không truyền audio_chunk_duration/threshold
+# vào generate() nữa) để cô lập xem giật cục có phải do bug #253 của model
+# (k2-fsa/OmniVoice, "skips/drops parts of the input text") hay không, độc lập
+# với việc tinh chỉnh chunk.
+GEN_NUM_STEP = int(os.environ.get("OMNISPEAK_NUM_STEP", "32"))  # mặc định thư viện
 
 # Giới hạn file mẫu giọng khi upload
 MAX_UPLOAD_BYTES = 15 * 1024 * 1024  # 15 MB
@@ -167,15 +166,11 @@ def _run_job(job_id: str, text: str, profile_id: Optional[str]):
         with GEN_LOCK:
             _reseed_rng()
             # Gọi 1 lần duy nhất với toàn bộ văn bản — model tự chia nhỏ nội bộ nếu
-            # dài (theo audio_chunk_duration/audio_chunk_threshold), giữ liên tục
-            # phong cách giữa các phần tốt hơn hẳn so với tự cắt đoạn rồi gọi rời rạc.
-            # audio_chunk_duration/audio_chunk_threshold được nâng lên (xem giải
-            # thích ở đầu file) để giảm số lần chia đoạn nội bộ trên văn bản thường
-            # gặp -> giảm hiện tượng tông đọc lên xuống trong cùng 1 lần đọc.
+            # dài (theo audio_chunk_duration/audio_chunk_threshold mặc định của thư
+            # viện, không override), giữ liên tục phong cách giữa các phần tốt hơn
+            # hẳn so với tự cắt đoạn rồi gọi rời rạc.
             audio = MODEL.generate(
                 text=text,
-                audio_chunk_duration=AUDIO_CHUNK_DURATION,
-                audio_chunk_threshold=AUDIO_CHUNK_THRESHOLD,
                 num_step=GEN_NUM_STEP,
                 **kwargs,
             )
