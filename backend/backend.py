@@ -52,7 +52,7 @@ SR = 24000
 # khi cần (dùng mặc định của thư viện: audio_chunk_threshold=30s, audio_chunk_duration=15s)
 # và giữ liên tục phong cách tốt hơn tự cắt câu rồi gọi generate() rời rạc.
 GEN_NUM_STEP = int(os.environ.get("OMNISPEAK_NUM_STEP", "32"))  # mặc định thư viện
-GEN_SPEED = float(os.environ.get("OMNISPEAK_SPEED", "0.9"))  # >1.0 nhanh hơn, <1.0 chậm hơn (mặc định thư viện: 1.0)
+GEN_SPEED = float(os.environ.get("OMNISPEAK_SPEED", "1.0"))  # >1.0 nhanh hơn, <1.0 chậm hơn (mặc định thư viện: 1.0)
 
 # Giới hạn file mẫu giọng khi upload
 MAX_UPLOAD_BYTES = 15 * 1024 * 1024  # 15 MB
